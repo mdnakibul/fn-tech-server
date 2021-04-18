@@ -66,32 +66,65 @@ client.connect(err => {
     })
 
     // Place an Order 
-    app.post('/addOrder',(req,res)=>{
+    app.post('/addOrder', (req, res) => {
         const order = req.body;
         orderCollection.insertOne(order)
-        .then(result => {
-            res.send(result.insertedCount > 0);
-            console.log(result.insertedCount);
-        })
-        .catch(error => { console.log(error.message); })
+            .then(result => {
+                res.send(result.insertedCount > 0);
+                console.log(result.insertedCount);
+            })
+            .catch(error => { console.log(error.message); })
     })
 
     // Get All Order 
-    app.get('/allOrder',(req,res)=>{
+    app.get('/allOrder', (req, res) => {
         orderCollection.find({})
-        .toArray((err, documents) => {
-            res.send(documents);
-        })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
+    // UPdate Order Status 
+
+    app.patch('/update/:id', (req, res) => {
+        console.log(req.body);
+        orderCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { status: req.body.modifiedValue }
+            })
+            .then(result => {
+                res.send(result.modifiedCount > 0);
+            })
+    })
+
+    //Order List based on customer
+
+    app.get('/order', (req, res) => {
+        const mail = req.query.email;
+        orderCollection.find({ email: mail })
+            .toArray((err, documents) => {
+                res.send(documents)
+                console.log(documents);
+            })
+    });
+
+    //   Identify Admin 
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminCollection.find({ email: email })
+            .toArray((err, doctors) => {
+                res.send(doctors.length > 0);
+            })
     })
 
     // Load a single Product 
 
-    app.get('/service/:id',(req,res)=>{
-        serviceCollection.find({_id: ObjectId(req.params.id)})
-        .toArray((err,documents)=>{
-          res.send(documents[0])
-        })
-      })
+    app.get('/service/:id', (req, res) => {
+        serviceCollection.find({ _id: ObjectId(req.params.id) })
+            .toArray((err, documents) => {
+                res.send(documents[0])
+            })
+    })
 
     //   Add Reviews to DataBase 
 
