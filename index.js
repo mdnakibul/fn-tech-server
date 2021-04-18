@@ -65,6 +65,26 @@ client.connect(err => {
             })
     })
 
+    // Place an Order 
+    app.post('/addOrder',(req,res)=>{
+        const order = req.body;
+        orderCollection.insertOne(order)
+        .then(result => {
+            res.send(result.insertedCount > 0);
+            console.log(result.insertedCount);
+        })
+        .catch(error => { console.log(error.message); })
+    })
+
+    // Load a single Product 
+
+    app.get('/service/:id',(req,res)=>{
+        serviceCollection.find({_id: ObjectId(req.params.id)})
+        .toArray((err,documents)=>{
+          res.send(documents[0])
+        })
+      })
+
     //   Add Reviews to DataBase 
 
     app.post('/addReview', (req, res) => {
