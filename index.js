@@ -31,7 +31,7 @@ client.connect(err => {
         const description = req.body.description;
         const price = req.body.price;
         const newImg = file.data;
-        console.log(title, description,price,file);
+        console.log(title, description, price, file);
         const encImg = newImg.toString('base64');
         var image = {
             contentType: file.mimetype,
@@ -51,40 +51,52 @@ client.connect(err => {
 
     app.get('/services', (req, res) => {
         serviceCollection.find({})
-          .toArray((err, documents) => {
-            res.send(documents);
-          })
-      });
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    });
 
     //   deleteService
     app.delete('/deleteService/:id', (req, res) => {
         serviceCollection.deleteOne({ _id: ObjectId(req.params.id) })
-          .then(result => {
-            res.send(result.deletedCount > 0);
-            console.log(result.deletedCount);
-          })
-      })
+            .then(result => {
+                res.send(result.deletedCount > 0);
+                console.log(result.deletedCount);
+            })
+    })
 
     //   Add Reviews to DataBase 
 
-    app.post('/addReview',(req,res) =>{
+    app.post('/addReview', (req, res) => {
         const review = req.body;
         reviewCollection.insertOne(review)
-        .then(result => {
-            res.send(result.insertedCount > 0);
-            console.log(result.insertedCount);
-        })
-        .catch(error => { console.log(error.message); })
+            .then(result => {
+                res.send(result.insertedCount > 0);
+                console.log(result.insertedCount);
+            })
+            .catch(error => { console.log(error.message); })
     })
 
     // Get Reviews from database 
 
     app.get('/reviews', (req, res) => {
         reviewCollection.find({})
-          .toArray((err, documents) => {
-            res.send(documents);
-          })
-      });
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    });
+
+    //   Make Someone Admin 
+
+    app.post('/makeAnAdmin', (req, res) => {
+        const admin = req.body;
+        adminCollection.insertOne(admin)
+            .then(result => {
+                res.send(result.insertedCount > 0);
+                console.log(result.insertedCount);
+            })
+            .catch(error => { console.log(error.message); })
+    })
 
 });
 
