@@ -76,6 +76,14 @@ client.connect(err => {
         .catch(error => { console.log(error.message); })
     })
 
+    // Get All Order 
+    app.get('/allOrder',(req,res)=>{
+        orderCollection.find({})
+        .toArray((err, documents) => {
+            res.send(documents);
+        })
+    })
+
     // Load a single Product 
 
     app.get('/service/:id',(req,res)=>{
