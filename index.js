@@ -65,6 +65,27 @@ client.connect(err => {
           })
       })
 
+    //   Add Reviews to DataBase 
+
+    app.post('/addReview',(req,res) =>{
+        const review = req.body;
+        reviewCollection.insertOne(review)
+        .then(result => {
+            res.send(result.insertedCount > 0);
+            console.log(result.insertedCount);
+        })
+        .catch(error => { console.log(error.message); })
+    })
+
+    // Get Reviews from database 
+
+    app.get('/reviews', (req, res) => {
+        reviewCollection.find({})
+          .toArray((err, documents) => {
+            res.send(documents);
+          })
+      });
+
 });
 
 app.get('/', (req, res) => {
